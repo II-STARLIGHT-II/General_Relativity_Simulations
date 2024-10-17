@@ -60,7 +60,11 @@ def leapfrog_eccentric_binary(r, v, total_time, dt):
         # Semi-major axis and eccentricity calculations (approximations)
         semi_major_axis = np.linalg.norm(r)
         semi_major_axes.append(semi_major_axis)
-        eccentricity = np.sqrt(1 - np.linalg.norm(v)**2 * semi_major_axis / G / (M1 + M2))
+
+        # Add a check to ensure the eccentricity calculation is valid
+        argument = 1 - np.linalg.norm(v)**2 * semi_major_axis / G / (M1 + M2)
+        argument = max(argument, 0)  # Prevent negative values
+        eccentricity = np.sqrt(argument)
         eccentricities.append(eccentricity)
 
     return np.array(positions), semi_major_axes, eccentricities, energy_errors
@@ -100,6 +104,3 @@ plt.title('Energy Error Over Time (Eccentric Binary)')
 plt.show()
 
        
-
-
-
