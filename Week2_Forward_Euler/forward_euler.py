@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 # Constants
 G = 1  # Gravitational constant
 Msun = 1.0  # Mass of Sun in solar masses
+epsilon = 1e-10  # Small threshold to prevent division by zero
 
 # Forward-Euler integration
 def forward_euler(x, v, a, dt):
@@ -14,7 +15,10 @@ def forward_euler(x, v, a, dt):
 
 # Calculate gravitational acceleration
 def grav_accel(r, M):
-    return -G * M / r**3 * r
+    r_norm = np.linalg.norm(r)  # Calculate the norm of the position vector
+    if r_norm < epsilon:
+        r_norm = epsilon  # Prevent division by zero by using a small value
+    return -G * M / r_norm**3 * r  # Calculate acceleration
 
 # Initial conditions for Earth (apocenter position)
 x_earth = np.array([1, 0, 0])  # AU
@@ -41,4 +45,3 @@ plt.xlabel('x [AU]')
 plt.ylabel('y [AU]')
 plt.title('Earth Orbit using Forward-Euler')
 plt.show()
-
