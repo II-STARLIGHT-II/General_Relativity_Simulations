@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 # Constants
 G = 1
 Msun = 1.0  # Mass of the Sun
+epsilon = 1e-10  # Small value to prevent division by zero
 
 # Leapfrog integrator
 def leapfrog(x, v, a, dt):
@@ -16,7 +17,10 @@ def leapfrog(x, v, a, dt):
 
 # Gravitational acceleration
 def grav_accel(r, M):
-    return -G * M / r**3 * r
+    r_norm = np.linalg.norm(r)
+    if r_norm < epsilon:  # Check to prevent division by zero
+        r_norm = epsilon
+    return -G * M / r_norm**3 * r
 
 # Initial conditions for Earth (apocenter)
 x_earth = np.array([1, 0, 0])  # AU
@@ -44,4 +48,3 @@ plt.xlabel('x [AU]')
 plt.ylabel('y [AU]')
 plt.title('Earth Orbit using Leapfrog')
 plt.show()
-
