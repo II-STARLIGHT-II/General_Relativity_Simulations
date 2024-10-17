@@ -5,10 +5,14 @@ import numpy as np
 G = 1
 Msun = 1.0  # Mass of the Sun
 c = 63197.8  # Speed of light in code units (AU/day)
+epsilon = 1e-10  # Small value to prevent division by zero
 
 # Gravitational acceleration with Newtonian force
 def grav_accel(r, M):
-    return -G * M / r**3 * r
+    r_norm = np.linalg.norm(r)
+    if r_norm < epsilon:
+        r_norm = epsilon  # Prevent division by zero
+    return -G * M / r_norm**3 * r
 
 # Leapfrog with variable time-step
 def leapfrog_variable(x, v, a, dt):
@@ -61,4 +65,3 @@ phi_end = math.atan2(positions[-1][1], positions[-1][0])
 precession = phi_end - phi_start
 precession_arcsec = precession * 206264.806  # Convert to arcseconds
 print(f"Precession: {precession_arcsec} arcseconds per orbit")
-
